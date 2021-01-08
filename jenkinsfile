@@ -1,45 +1,31 @@
 pipeline {
-	agent none 
-	stages {
-		stage ('build') {
-			agent { label 'slave1' }
-			steps {
-				sh '''
-						echo "this is build stage"
-						sleep 2
-				   '''	
-			} 
-		}
-		stage ('deploy') {
-		parallel {
-		stage ('deploy1') {
-			agent { label 'slave1' }
-			steps {
-				sh '''
-						echo "this is deploy stage"
-						sleep 2
-				   '''	
-			}	   
-		}
-		
-		stage ('deploy2') {
-			agent { label 'slave1' }
-			steps {
-				sh '''
-						echo "this is deploy stage"
-						sleep 2
-				   '''	
-			}	   
-		}
-		}
-		stage ('test') {
-			agent { label 'master' }
-			steps {
-				sh '''
-						echo "this is test stage"
-						sleep 2
-				   '''	
-			}	   
-		}
-	}
+    agent any
+    stages {
+        stage('Non-Parallel Stage') {
+            steps {
+                echo "Executing this stage first"
+            }
+        }
+        stage('Parallel Stage') {
+            parallel {
+                stage('Parallel Test 1') {
+                    steps {
+                        echo "Here trigger job: jenkins_job_1. Triggered at time:"
+                        sh(script: "date -u")
+                        build(job: "jenkins_job_1")
+                    }
+                }
+                stage('Parallel Test 2') {
+                    steps {
+                        echo "Here trigger job: jenkins_job_2. Triggered at time:"
+                        sh(script: "date -u")
+                        build(job: "jenkins_job_2")
+                        echo "Here trigger job: jenkins_job_3. Triggered at time:"
+                        sh(script: """date -u""")
+                        build(job: "jenkins_job_3")
+                    }
+                }
+            }
+        }
+    }
 }
