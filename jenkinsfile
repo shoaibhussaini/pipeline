@@ -19,7 +19,8 @@ pipeline {
 						echo "this is deploy stage"
 						sleep 2
 				   '''	
-				}	   
+					}	   
+				}
 			}
 		}
 		stage ('deploy2') {
