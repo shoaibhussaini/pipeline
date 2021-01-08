@@ -1,8 +1,7 @@
 pipeline {
-	agent none 
+	agent any 
 	stages {
 		stage ('build') {
-			agent { label 'slave1' }
 			steps {
 				sh '''
 						echo "this is build stage"
@@ -10,38 +9,24 @@ pipeline {
 				   '''	
 			} 
 		}
-		stage ('deploy') {
+
 		parallel {
 		stage ('deploy1') {
-			agent { label 'slave1' }
 			steps {
-				sh '''
-						echo "this is deploy stage"
-						sleep 2
-				   '''	
-					}	   
-				}
+			     sh '''
+					echo "This is deploy stage"
+					sleep 2
+				'''
 			}
 		}
+		
 		stage ('deploy2') {
-			agent { label 'slave1' }
 			steps {
-				sh '''
-						echo "this is deploy stage"
-						sleep 2
-				   '''	
-			}	   
-		}
-		}
-		stage ('test') {
-			agent { label 'master' }
-			steps {
-				sh '''
-						echo "this is test stage"
-						sleep 2
-				   '''	
-			}	   
+			    sh '''
+				echo "This is deploy stage"
+				sleep 2
+			       '''
+			}
 		}
 	}
 }
-
